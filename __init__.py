@@ -27,6 +27,10 @@ __author__ = 'BlackGame'
 class GPIO_ControlSkill(MycroftSkill):
 
     def __init__(self):
+        GPIO.output(11,self.on_led_change)
+        GPIO.output(12,self.on_led_change)
+        GPIO.output(15,self.on_buzzer_change)
+        GPIO.output(16,self.on_buzzer_change)
         super(GPIO_ControlSkill, self).__init__(name="GPIO_ControlSkill")
 
     def initialize(self):
@@ -36,6 +40,12 @@ class GPIO_ControlSkill(MycroftSkill):
 
         self.register_intent(command_intent, self.handle_command_intent)
 
+    def on_led_change(self):
+        self.speak("Led is %s" % ledstatus)
+
+    def on_buzzer_change(self):
+        self.speak("Buzzer is %s" % buzzerstatus)
+
     def handle_command_intent(self, message):
         elif message.data["command"].upper() == "TURN":
             if message.data["ioobject"].upper() == "LED":
@@ -43,9 +53,11 @@ class GPIO_ControlSkill(MycroftSkill):
                     if message.data["ioparam"].upper() == "ON":
                         GPIO.output(11,True)
                         GPIO.output(12,True)
+                        ledstatus = "On"
                     elif message.data["ioparam"].upper() == "OFF":
                         GPIO.output(11,False)
                         GPIO.output(12,False)
+                        ledstatus = "Off"
                 else:
                     self.speak_dialog("ipparamrequired")
             if message.data["ioobject"].upper() == "BUZZER":
@@ -53,9 +65,11 @@ class GPIO_ControlSkill(MycroftSkill):
                     if message.data["ioparam"].upper() == "ON":
                         GPIO.output(15,True)
                         GPIO.output(16,True)
+                        buzzerstatus = "On"
                     elif message.data["ioparam"].upper() == "OFF":
                         GPIO.output(15,False)
                         GPIO.output(16,False)
+                        buzzerstatus = "Off"
                 else:
                     self.speak_dialog("ipparamrequired")
 
